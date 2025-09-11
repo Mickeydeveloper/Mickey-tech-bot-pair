@@ -48,16 +48,13 @@ router.get('/', async (req, res) => {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
                 },
-                printQRInTerminal: false,
-                logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                browser: Browsers.windows('Chrome'),
-                markOnlineOnConnect: false,
-                generateHighQualityLinkPreview: false,
-                defaultQueryTimeoutMs: 60000,
-                connectTimeoutMs: 60000,
-                keepAliveIntervalMs: 30000,
-                retryRequestDelayMs: 250,
-                maxRetries: 5,
+                markOnlineOnConnect: false, // Disable to reduce connection issues
+                generateHighQualityLinkPreview: false, // Disable to reduce connection issues
+                defaultQueryTimeoutMs: 60000, // Increase timeout
+                connectTimeoutMs: 60000, // Increase connection timeout
+                keepAliveIntervalMs: 30000, // Keep connection alive
+                retryRequestDelayMs: 250, // Retry delay
+                maxRetries: 5, // Maximum retries,
             });
 
             KnightBot.ev.on('connection.update', async (update) => {
