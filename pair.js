@@ -42,20 +42,24 @@ router.get('/', async (req, res) => {
 
         try {
             const { version, isLatest } = await fetchLatestBaileysVersion();
-            let KnightBot = makeWASocket({
+            // Improved Baileys socket configuration (copied from qr.js)
+            const socketConfig = {
                 version,
+                logger: pino({ level: 'silent' }),
+                browser: Browsers.windows('Chrome'),
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
                 },
-                markOnlineOnConnect: false, // Disable to reduce connection issues
-                generateHighQualityLinkPreview: false, // Disable to reduce connection issues
-                defaultQueryTimeoutMs: 60000, // Increase timeout
-                connectTimeoutMs: 60000, // Increase connection timeout
-                keepAliveIntervalMs: 30000, // Keep connection alive
-                retryRequestDelayMs: 250, // Retry delay
-                maxRetries: 5, // Maximum retries,
-            });
+                markOnlineOnConnect: false,
+                generateHighQualityLinkPreview: false,
+                defaultQueryTimeoutMs: 60000,
+                connectTimeoutMs: 60000,
+                keepAliveIntervalMs: 30000,
+                retryRequestDelayMs: 250,
+                maxRetries: 5,
+            };
+            let KnightBot = makeWASocket(socketConfig);
 
             KnightBot.ev.on('connection.update', async (update) => {
                 const { connection, lastDisconnect, isNewLogin, isOnline } = update;
@@ -78,18 +82,18 @@ router.get('/', async (req, res) => {
 
                         // Send video thumbnail with caption
                         await KnightBot.sendMessage(userJid, {
-                            image: { url: 'https://img.youtube.com/vi/-oz_u1iMgf8/maxresdefault.jpg' },
-                            caption: `🎬 *KnightBot MD V2.0 Full Setup Guide!*\n\n🚀 Bug Fixes + New Commands + Fast AI Chat\n📺 Watch Now: https://youtu.be/-oz_u1iMgf8`
+                            image: { url: 'https://files.catbox.moe/a5ebc9.jpg' },
+                            caption: `🎬 *MICKEY-TECH-BOT V2.0 Full Setup Guide!*\n\n🚀 Bug Fixes + New Commands + Fast AI Chat\n📺 Watch Now: https://youtu.be/X0JnH__fEsg?si=H8zRmykA_TnPV8XN`
                         });
                         console.log("🎬 Video guide sent successfully");
 
                         // Send warning message
-                        await KnightBot.sendMessage(userJid, {
-                            text: `⚠️Do not share this file with anybody⚠️\n 
-┌┤✑  Thanks for using Knight Bot
-│└────────────┈ ⳹        
-│©2024 Mr Unique Hacker 
-└─────────────────┈ ⳹\n\n`
+                            await KnightBot.sendMessage(userJid, {
+                        text: 'WARNING: Do not share this file with anybody!\n\n' +
+                            '----------------------------------------\n' +
+                            '|  Thanks for using Mickey Tech Bot           |\n' +
+                            '|  (c)2025 Mickey              |\n' +
+                            '----------------------------------------\n\n'
                         });
                         console.log("⚠️ Warning message sent successfully");
 
